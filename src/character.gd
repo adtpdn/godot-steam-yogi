@@ -14,6 +14,8 @@ const BLACK_MATERIAL = preload("res://assets/materials/black_mat.tres")
 #@export var list_char = ["bob","masbro","gatot","oldpops"]
 
 var player_location
+var is_player_move = false
+var target
 var path = []
 var path_ind = 0
 const move_speed = 5
@@ -35,7 +37,7 @@ func _physics_process(delta):
 			##Utils.mouse_selected = ray_cast_3d.get_collider().get_parent().slot_id
 			#get_raycast_tiles()
 		##print(sprite)
-		#if Utils.player_move:
+		#if is_player_move == true:
 			### FOR SET THE MAXIMUM move_vec
 			#raycast = false
 			##if Utils.sprite_texture != null:
@@ -47,29 +49,22 @@ func _physics_process(delta):
 				##path_ind += 1
 			#else :
 				## Set the velocity for move_and_slide functions (Compare the move_and_slide function on Godot 3 and Godot 4)
-				#velocity = move_vec.normalized() * move_speed
+				#var direction := global_transform.origin.direction_to(target)
+				#var distance := global_transform.origin.distance_to(target)
+				#var max_speed := distance
+				#velocity = direction * minf(move_speed, max_speed)
+				#animation_player.play("Running")
+				
 				## Set the up_direction
 				#up_direction = Vector3(0,1,0)
 				### This is if godot 3
 				##move_and_slide(move_vec.normalized() * move_speed, Vector3(0,1,0))
 				## Play the animations running 
-				#animation_player.play("Running")
+				
 				## Set the player position 
 				#position.y =  0.637
-				#move_and_slide()
 				## If animation finished connect it to the _on_animation_player_animation_finished functions
 				##animation_player.animation_finished.connect(_on_animation_player_animation_finished)
-
-func move_to(x):
-	var target = x
-	var direction := global_transform.origin.direction_to(target)
-	var distance := global_transform.origin.distance_to(target)
-
-	var max_speed := distance
-	velocity = direction * minf(move_speed, max_speed)
-	move_and_slide()
-	#path = a_star_map.get_tiles_path(global_transform.origin, target_pos)
-	#path_ind = 0
 
 func get_raycast_tiles():
 	#var grid = ray_cast_3d.get_collider().get_parent()
@@ -92,7 +87,6 @@ func get_raycast_tiles():
 	# Get the resource path of the sprite if the sprite is not null
 	var sprite_path = sprite.resource_path
 	#print("RESOURCE PATH : ",sprite_path)
-	
 	#var sprite_right = sprite_path.right(11)
 	#var sprite_text = sprite_right.trim_suffix(".png")
 	

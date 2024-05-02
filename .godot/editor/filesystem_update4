@@ -1,3 +1,5 @@
 res://scenes/map.tscn
 res://scenes/spawn/boost.tscn
 res://scenes/spawn/tiles_spawn.tscn
+res://src/map.gd
+res://src/character.gd

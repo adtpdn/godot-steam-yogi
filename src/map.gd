@@ -11,6 +11,7 @@ class_name Map
 @onready var main = get_node("/root/main")
 @onready var gui = get_node("/root/main/Map/GUI")
 
+
 # Variable on Tree
 @onready var floor_map_region: Node3D = $FloorMapRegion
 @onready var timer: Timer = $Timer
@@ -50,6 +51,8 @@ var is_boost_active = false
 var canera_first_rotation = false
 var _player_action = 2
 var is_mouse_clicked = false
+
+var selected_player
 
 
 var sprite_texture
@@ -351,111 +354,126 @@ func menu_player_disabled(status : bool):
 
 func hover_tiles(clicked_id):
 	print(clicked_id)
+	
 	var _move_to = str("Move To: %s " % clicked_id)
 	var tiles_token_sprite_sprite_3d = floor_array[clicked_id].get_child(1).get_child(0)
 	
 	for x in range(floor_array.size()):
 		if clicked_id == floor_array[x].slot_id && floor_array[x].occupied_by != null && gui.is_menu_player_show == false && is_mouse_clicked == true:
+			selected_player = floor_array[clicked_id].occupied_by
+			print("player selected : ", selected_player)
 			gui._menu_player.show()
 			gui.is_menu_player_show = true
-		elif clicked_id == floor_array[x].slot_id && gui.is_menu_player_show == true && is_mouse_clicked == true:	
+		elif floor_array[x].slot_id != clicked_id && gui.is_menu_player_show == true:
+			selected_player = null
+		elif clicked_id == floor_array[x].slot_id && gui.is_menu_player_show == true:
 			# If generated array isn't null & menu player showing, reset it			
 			print("GENERATED NEIGH ARR : ",gen_neigh_array)
 			# ---
-			
+
+			if selected_player != null:
+				print(selected_player)
+				print(is_player_try_move)
+				selected_player.position + floor_array[clicked_id].position
+				print("target: ", selected_player.target)
+				selected_player.is_player_move = true		
+				
 			gui._menu_player.hide()
 			gui.is_menu_player_show = false
+			
+			#selected_player.is_player_move = false
 			# Unhover the tiles , that has been hover before
 			for floor in gen_neigh_array:
 				floor_array[floor].get_child(1).set_surface_override_material(0,gui.create_material("TilesPrimaryMaterial",gui.TILES_PRIMARY_MATERIAL))
 				print(floor_array[floor].get_child(1).get_surface_override_material(0))
-			gen_neigh_array = []
+			#selected_player.is_player_move = false
 	
 	# If the ui_player_active (set true on the move_button), do with the Autoload
-	if is_menu_player_active:
-		# Check if the gen_neigh_array is not empty
-		# Check if the gen_neigh_array has slot_id
-		# If slot_id is neighbors , Example [0,1,4,5] 
-		if !gen_neigh_array.is_empty() && gen_neigh_array.has(clicked_id) :
-			# 0 is the first value in Utils.gen_neigh_array[0], others than that will go move 
-			# Check if the Utils.mouse_selected (Slot_id from ray_cast player) is not the same with click_id 
-			if gen_neigh_array[0] != clicked_id && Utils.mouse_selected != clicked_id:
-				gui._move_label.text = _move_to
-				#print(Utils.move_label.text)
-				# Set the Utils.player_move to enable in physics process in player (to move player)
-				is_player_move = true
-				_player_action -= 1
-				gui._action_player_label.text = "Action Player : %s" % _player_action
-				gui._end_turn_button.disabled = false
-				gui._end_phase_button.disabled = false
-				# Disabled the move_button 
-				gui._move_button.disabled = true
+	#if is_menu_player_active:
+		## Check if the gen_neigh_array is not empty
+		## Check if the gen_neigh_array has slot_id
+		## If slot_id is neighbors , Example [0,1,4,5] 
+		#if !gen_neigh_array.is_empty() && gen_neigh_array.has(clicked_id) :
+			## 0 is the first value in Utils.gen_neigh_array[0], others than that will go move 
+			## Check if the Utils.mouse_selected (Slot_id from ray_cast player) is not the same with click_id 
+			#if gen_neigh_array[0] != clicked_id && Utils.mouse_selected != clicked_id:
+				#gui._move_label.text = _move_to
+				##print(Utils.move_label.text)
+				## Set the Utils.player_move to enable in physics process in player (to move player)
+				#is_player_move = true
+				#_player_action -= 1
+				#gui._action_player_label.text = "Action Player : %s" % _player_action
+				#gui._end_turn_button.disabled = false
+				#gui._end_phase_button.disabled = false
+				## Disabled the move_button 
+				#gui._move_button.disabled = true
 				#print(Utils.floor_array[clicked_id])
 				#print("SPRITE 3D : ", sprite_3d.texture)
 				## CHECK THE CURRENT SPRITE 
-				if tiles_token_sprite_sprite_3d.texture != null:
-					gui._grab_tiles_button.disabled = false
-					#print("UTils.grab button : ", Utils.grab_button)
-					if is_put_button or is_grab_button:
-						gui._grab_tiles_button.disabled = true
-				else : 
-					is_grab_button.disabled = true
-					is_put_button.disabled = false
-					if is_put_button or is_grab_button:
-						gui._put_tiles_button.disabled = true
+				#if tiles_token_sprite_sprite_3d.texture != null:
+					#gui._grab_tiles_button.disabled = false
+					##print("UTils.grab button : ", Utils.grab_button)
+					#if is_put_button or is_grab_button:
+						#gui._grab_tiles_button.disabled = true
+				#else : 
+					#is_grab_button.disabled = true
+					#is_put_button.disabled = false
+					#if is_put_button or is_grab_button:
+						#gui._put_tiles_button.disabled = true
+						
+				
 				#print("PLAYER MOVE")
 			
-			if Utils.mouse_selected == clicked_id:
-				gui._menu_player.hide()
-
-			# Unhover the tiles if slot_id is the first value in Utils.gen_neigh_array[0]
-			unhover_tiles(gen_neigh_array)
-			# Set the menu_player_active to false 
-			is_menu_player_active = false
-			
-			if clicked_id == 0 or clicked_id == 1 or clicked_id == 2 or clicked_id == 3 or clicked_id == 36 or clicked_id == 37 or clicked_id == 38 or clicked_id == 39:
-				gui._put_tiles_button.disabled = true
-			# Set return for stop the function
-			return
-			
-	# Check if the gen_neigh_array in empty
-	if gen_neigh_array.is_empty():
-
-		gui._end_turn_button.disabled = false
-		gui._end_phase_button.disabled = false
-		gui._end_phase_button.visible = false
-
-		# if Utils.mouse_selected == clicked_id:
-			
-		if tiles_token_sprite_sprite_3d.texture != null:
-			gui._grab_tiles_button.disabled = false
-			gui._put_tiles_button.disabled = true
-		else : 
-			#print("PUT FALSE")
-			gui._put_tiles_button.disabled = false
-		if is_grab_button:
-			gui._grab_tiles_button.disabled = true
-		if is_put_button: 
-			gui._grab_tiles_button.disabled = true
-		
-		# Checking if the block is true
-		if clicked_id == 0 or clicked_id == 1 or clicked_id == 2 or clicked_id == 3 or clicked_id == 36 or clicked_id == 37 or clicked_id == 38 or clicked_id == 39:
-			#print("FLOOR ARRAY 0")
-			gui._grab_tiles_button.disabled = true
-			gui._put_tiles_button.disabled = true
-				
-	#else :
-		## Check if the gen_neigh_array has slot_id 
-		#if gen_neigh_array[0] == clicked_id or gen_neigh_array[0] != clicked_id:
-			#unhover_tiles(gen_neigh_array)
-			#gui._menu_player.hide()
+			#if Utils.mouse_selected == clicked_id:
+				#gui._menu_player.hide()
+#
+			## Unhover the tiles if slot_id is the first value in Utils.gen_neigh_array[0]
+			##unhover_tiles(gen_neigh_array)
+			## Set the menu_player_active to false 
+			#is_menu_player_active = false
+			#
+			#if clicked_id == 0 or clicked_id == 1 or clicked_id == 2 or clicked_id == 3 or clicked_id == 36 or clicked_id == 37 or clicked_id == 38 or clicked_id == 39:
+				#gui._put_tiles_button.disabled = true
+			## Set return for stop the function
+			#return
+			#
+	## Check if the gen_neigh_array in empty
+	#if gen_neigh_array.is_empty():
+#
+		#gui._end_turn_button.disabled = false
+		#gui._end_phase_button.disabled = false
+		#gui._end_phase_button.visible = false
+#
+		## if Utils.mouse_selected == clicked_id:
+			#
+		#if tiles_token_sprite_sprite_3d.texture != null:
+			#gui._grab_tiles_button.disabled = false
+			#gui._put_tiles_button.disabled = true
+		#else : 
+			##print("PUT FALSE")
+			#gui._put_tiles_button.disabled = false
+		#if is_grab_button:
+			#gui._grab_tiles_button.disabled = true
+		#if is_put_button: 
+			#gui._grab_tiles_button.disabled = true
+		#
+		## Checking if the block is true
+		#if clicked_id == 0 or clicked_id == 1 or clicked_id == 2 or clicked_id == 3 or clicked_id == 36 or clicked_id == 37 or clicked_id == 38 or clicked_id == 39:
+			##print("FLOOR ARRAY 0")
+			#gui._grab_tiles_button.disabled = true
+			#gui._put_tiles_button.disabled = true
+				#
+	##else :
+		### Check if the gen_neigh_array has slot_id 
+		##if gen_neigh_array[0] == clicked_id or gen_neigh_array[0] != clicked_id:
+			##unhover_tiles(gen_neigh_array)
+			##gui._menu_player.hide()
 
 func unhover_tiles(_gen_neigh_array):
 	print("Filter Array : ", gen_neigh_array)
 	for x in range(floor_array.size()):
 		var xtm = floor_array[x].get_child(1)
-		# Check the TILES surface material is occupied based on the "x" variable
-		
+		# Check the TILES surface material is occupied based on the "x" variable	
 		#if hover_show.get_surface_override_material(0) != null:
 		## Set the surface material into null or empty
 			#hover_show.set_surface_override_material(0,GREEN_MATERIAL)
