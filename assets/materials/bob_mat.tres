@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://x4xe2opd2e55"]
+
+[ext_resource type="Texture2D" uid="uid://d1xyo4eswqcqf" path="res://assets/textures/characters/bob_diffuse_tex.png" id="1_2uowt"]
+
+[resource]
+resource_name = "Material"
+cull_mode = 2
+albedo_texture = ExtResource("1_2uowt")
+roughness = 0.5

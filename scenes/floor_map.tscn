@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://bbjiket8dmy6o"]
+
+[ext_resource type="BoxMesh" uid="uid://j3lcvjtc5pu4" path="res://assets/meshes/floor_mesh.tres" id="1_pt6gk"]
+[ext_resource type="Material" uid="uid://bq0ij4heg2d35" path="res://assets/materials/white_mat.tres" id="1_vi1w3"]
+[ext_resource type="Script" path="res://src/floor_map.gd" id="2_ls8t6"]
+[ext_resource type="Shape3D" uid="uid://bm0tcyrmm0ep" path="res://assets/meshes/floor_map_collision_shape_3d.tres" id="3_o6m4l"]
+
+[node name="Floor1" type="MeshInstance3D"]
+rotation_edit_mode = 2
+mesh = ExtResource("1_pt6gk")
+surface_material_override/0 = ExtResource("1_vi1w3")
+script = ExtResource("2_ls8t6")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = ExtResource("3_o6m4l")

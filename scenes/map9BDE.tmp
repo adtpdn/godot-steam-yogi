@@ -1,0 +1,472 @@
+[gd_scene load_steps=7 format=3 uid="uid://t7vfq3ukk5ue"]
+
+[ext_resource type="Script" path="res://src/map.gd" id="1_4awjs"]
+[ext_resource type="Script" path="res://src/gui.gd" id="2_3rkgo"]
+[ext_resource type="Script" path="res://src/3d_camera.gd" id="3_v5rvr"]
+[ext_resource type="Script" path="res://src/obstacle.gd" id="5_oq7qu"]
+[ext_resource type="Script" path="res://src/multiplayer_spawner.gd" id="8_rj8du"]
+
+[sub_resource type="Environment" id="Environment_2meu0"]
+reflected_light_source = 2
+
+[node name="main" type="Node"]
+
+[node name="Map" type="Node3D" parent="."]
+script = ExtResource("1_4awjs")
+
+[node name="Obstacle" type="Node3D" parent="Map"]
+script = ExtResource("5_oq7qu")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Map"]
+transform = Transform3D(0.698596, 0.385695, -0.602663, -0.0163334, 0.850654, 0.525472, 0.71533, -0.357249, 0.600563, -3.011, 5.699, 6.18)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Map"]
+environment = SubResource("Environment_2meu0")
+
+[node name="FloorMapRegion" type="Node3D" parent="Map"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="Timer" type="Timer" parent="Map"]
+process_callback = 0
+wait_time = 2.0
+one_shot = true
+
+[node name="PhaseTimer" type="Timer" parent="Map"]
+process_callback = 0
+wait_time = 2.0
+one_shot = true
+
+[node name="GUI" type="CanvasLayer" parent="Map"]
+script = ExtResource("2_3rkgo")
+
+[node name="Debug" type="Control" parent="Map/GUI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureRectDebug" type="TextureRect" parent="Map/GUI/Debug"]
+layout_mode = 0
+offset_left = 47.0
+offset_top = 215.0
+offset_right = 1541.0
+offset_bottom = 1707.0
+scale = Vector2(0.06, 0.06)
+
+[node name="PhaseLabel" type="Label" parent="Map/GUI/Debug"]
+visible = false
+layout_mode = 0
+offset_left = 121.0
+offset_top = 211.0
+offset_right = 1058.0
+offset_bottom = 400.0
+theme_override_font_sizes/font_size = 40
+text = "Main Phase 2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DebugContainer" type="VBoxContainer" parent="Map/GUI/Debug"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 41.0
+offset_right = 174.0
+offset_bottom = 203.0
+
+[node name="MoveLabel" type="Label" parent="Map/GUI/Debug/DebugContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Move To : "
+
+[node name="ActionPlayerLabel" type="Label" parent="Map/GUI/Debug/DebugContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Action Player : "
+
+[node name="TimerLabel" type="Label" parent="Map/GUI/Debug/DebugContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Timer  : "
+
+[node name="RandomTilesButton" type="Button" parent="Map/GUI/Debug/DebugContainer"]
+layout_mode = 2
+text = "Random Tiles"
+
+[node name="PhaseTwoButton" type="Button" parent="Map/GUI/Debug/DebugContainer"]
+layout_mode = 2
+text = "Two Phase"
+
+[node name="ObstacleSpawnner" type="HBoxContainer" parent="Map/GUI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -215.0
+offset_top = 108.0
+offset_right = 215.0
+offset_bottom = 148.0
+grow_horizontal = 2
+
+[node name="BlockSpawnButton" type="Button" parent="Map/GUI/ObstacleSpawnner"]
+layout_mode = 2
+text = "Block Spawn"
+
+[node name="BoostSpawnButton" type="Button" parent="Map/GUI/ObstacleSpawnner"]
+layout_mode = 2
+text = "Boost Spawn"
+
+[node name="TilesSpawnButton" type="Button" parent="Map/GUI/ObstacleSpawnner"]
+layout_mode = 2
+text = "Tiles Spawn"
+
+[node name="StackSpawnButton" type="Button" parent="Map/GUI/ObstacleSpawnner"]
+layout_mode = 2
+text = "Stack Spawn"
+
+[node name="MenuPlayer" type="VBoxContainer" parent="Map/GUI"]
+visible = false
+custom_minimum_size = Vector2(10, 0)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -221.0
+offset_top = -197.0
+offset_right = -52.0
+offset_bottom = -56.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="MoveButton" type="Button" parent="Map/GUI/MenuPlayer"]
+layout_mode = 2
+text = "Move"
+
+[node name="GrabTilesButton" type="Button" parent="Map/GUI/MenuPlayer"]
+layout_mode = 2
+text = "Grab Tiles"
+
+[node name="PutTilesButton" type="Button" parent="Map/GUI/MenuPlayer"]
+layout_mode = 2
+text = "Put Tiles"
+
+[node name="EndPhaseButton" type="Button" parent="Map/GUI/MenuPlayer"]
+visible = false
+layout_mode = 2
+text = "End Phase 1"
+
+[node name="EndTurnButton" type="Button" parent="Map/GUI/MenuPlayer"]
+layout_mode = 2
+text = "End Turn"
+
+[node name="Block" type="HBoxContainer" parent="Map/GUI"]
+visible = false
+custom_minimum_size = Vector2(50, 0)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -143.0
+offset_top = -115.0
+offset_right = 231.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+
+[node name="BlockHorizontalButton" type="Button" parent="Map/GUI/Block"]
+layout_mode = 2
+text = "Block Horizontal"
+
+[node name="BlockHorizontalLabel" type="Label" parent="Map/GUI/Block/BlockHorizontalButton"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -1.0
+offset_right = 16.0
+offset_bottom = 21.0
+theme_override_font_sizes/font_size = 15
+text = "2"
+
+[node name="BlockVerticalButton" type="Button" parent="Map/GUI/Block"]
+layout_mode = 2
+text = "Block Vertical"
+
+[node name="BlockVerticalLabel" type="Label" parent="Map/GUI/Block/BlockVerticalButton"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = 17.0
+offset_bottom = 24.0
+theme_override_font_sizes/font_size = 15
+text = "2"
+
+[node name="Boost" type="HBoxContainer" parent="Map/GUI"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -195.0
+offset_top = -116.0
+offset_right = 200.0
+offset_bottom = -52.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 10
+
+[node name="BoostUpButton" type="Button" parent="Map/GUI/Boost"]
+layout_mode = 2
+text = "Boost Up"
+
+[node name="BoostUpLabel" type="Label" parent="Map/GUI/Boost/BoostUpButton"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 20.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 15
+text = "1"
+
+[node name="BoostDownButton" type="Button" parent="Map/GUI/Boost"]
+layout_mode = 2
+text = "Boost Down"
+
+[node name="BoostDownLabel" type="Label" parent="Map/GUI/Boost/BoostDownButton"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 20.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 15
+text = "1"
+
+[node name="BoostLeftButton" type="Button" parent="Map/GUI/Boost"]
+layout_mode = 2
+text = "Boost Left"
+
+[node name="BoostLeftLabel" type="Label" parent="Map/GUI/Boost/BoostLeftButton"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 20.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 15
+text = "1"
+
+[node name="BoostRightButton" type="Button" parent="Map/GUI/Boost"]
+layout_mode = 2
+text = "Boost Right"
+
+[node name="BoostRightLabel" type="Label" parent="Map/GUI/Boost/BoostRightButton"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 20.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 15
+text = "1"
+
+[node name="TilesSpawn" type="HBoxContainer" parent="Map/GUI"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -224.0
+offset_top = -116.0
+offset_right = 231.0
+offset_bottom = -52.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="TilesSpawnCoinButton" type="Button" parent="Map/GUI/TilesSpawn"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Coin Spawn"
+
+[node name="TilesSpawnCoinLabel" type="Label" parent="Map/GUI/TilesSpawn/TilesSpawnCoinButton"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "1"
+
+[node name="TilesSpawnHeartButton" type="Button" parent="Map/GUI/TilesSpawn"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Heart Spawn"
+
+[node name="TilesSpawnHeartLabel" type="Label" parent="Map/GUI/TilesSpawn/TilesSpawnHeartButton"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "1"
+
+[node name="TilesSpawnDiamondButton" type="Button" parent="Map/GUI/TilesSpawn"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Diamond Spawn"
+
+[node name="TilesSpawnDiamondLabel" type="Label" parent="Map/GUI/TilesSpawn/TilesSpawnDiamondButton"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "1"
+
+[node name="TilesSpawnStarButton" type="Button" parent="Map/GUI/TilesSpawn"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Start Spawn"
+
+[node name="TilesSpawnStarLabel" type="Label" parent="Map/GUI/TilesSpawn/TilesSpawnStarButton"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "1"
+
+[node name="Stack" type="HBoxContainer" parent="Map/GUI"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -52.0
+offset_top = -116.0
+offset_right = 39.0
+offset_bottom = -53.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="StackButton" type="Button" parent="Map/GUI/Stack"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Stack"
+
+[node name="StackLabel" type="Label" parent="Map/GUI/Stack/StackButton"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "4"
+
+[node name="TurnContainer" type="HBoxContainer" parent="Map/GUI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -260.0
+offset_top = 16.0
+offset_right = 260.0
+offset_bottom = 96.0
+grow_horizontal = 2
+size_flags_horizontal = 6
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Turn1" type="Panel" parent="Map/GUI/TurnContainer"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Map/GUI/TurnContainer/Turn1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
+
+[node name="Turn2" type="Panel" parent="Map/GUI/TurnContainer"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Map/GUI/TurnContainer/Turn2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
+
+[node name="Turn3" type="Panel" parent="Map/GUI/TurnContainer"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Map/GUI/TurnContainer/Turn3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
+
+[node name="Turn4" type="Panel" parent="Map/GUI/TurnContainer"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Map/GUI/TurnContainer/Turn4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
+
+[node name="Turn5" type="Panel" parent="Map/GUI/TurnContainer"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Map/GUI/TurnContainer/Turn5"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
+
+[node name="Turn6" type="Panel" parent="Map/GUI/TurnContainer"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Map/GUI/TurnContainer/Turn6"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
+
+[node name="Camera3D" type="Camera3D" parent="Map"]
+transform = Transform3D(0.838671, 0.385118, -0.385118, 0, 0.707107, 0.707107, 0.544639, -0.59303, 0.59303, 0.455, 5.791, 6.485)
+current = true
+script = ExtResource("3_v5rvr")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="Map"]
+script = ExtResource("8_rj8du")
+
+[connection signal="timeout" from="Map/Timer" to="Map" method="_on_timer_timeout"]
+[connection signal="timeout" from="Map/PhaseTimer" to="Map" method="_on_phase_timer_timeout"]
+[connection signal="pressed" from="Map/GUI/Debug/DebugContainer/RandomTilesButton" to="Map" method="_on_random_tiles_pressed"]
+[connection signal="pressed" from="Map/GUI/Debug/DebugContainer/PhaseTwoButton" to="Map" method="_on_phase_two_button_pressed"]
+[connection signal="pressed" from="Map/GUI/ObstacleSpawnner/BlockSpawnButton" to="Map" method="_on_block_spawn_button_pressed"]
+[connection signal="pressed" from="Map/GUI/ObstacleSpawnner/BoostSpawnButton" to="Map" method="_on_boost_spawn_button_pressed"]
+[connection signal="pressed" from="Map/GUI/ObstacleSpawnner/TilesSpawnButton" to="Map" method="_on_tiles_spawn_button_pressed"]
+[connection signal="pressed" from="Map/GUI/ObstacleSpawnner/StackSpawnButton" to="Map" method="_on_stack_spawn_button_2_pressed"]
+[connection signal="pressed" from="Map/GUI/MenuPlayer/MoveButton" to="Map" method="_on_move_button_pressed"]
+[connection signal="pressed" from="Map/GUI/MenuPlayer/GrabTilesButton" to="Map" method="_on_grab_tiles_button_pressed"]
+[connection signal="pressed" from="Map/GUI/MenuPlayer/PutTilesButton" to="Map" method="_on_put_tiles_button_pressed"]
+[connection signal="pressed" from="Map/GUI/MenuPlayer/EndPhaseButton" to="Map" method="_on_end_phase_button_pressed"]
+[connection signal="pressed" from="Map/GUI/MenuPlayer/EndTurnButton" to="Map" method="_on_end_turn_button_pressed"]
+[connection signal="pressed" from="Map/GUI/Block/BlockHorizontalButton" to="Map/Obstacle" method="_on_block_horizontal_button_pressed"]
+[connection signal="pressed" from="Map/GUI/Block/BlockVerticalButton" to="Map/Obstacle" method="_on_block_vertical_button_pressed"]
+[connection signal="pressed" from="Map/GUI/Boost/BoostUpButton" to="Map/Obstacle" method="_on_boost_up_button_pressed"]
+[connection signal="pressed" from="Map/GUI/Boost/BoostDownButton" to="Map/Obstacle" method="_on_boost_down_button_pressed"]
+[connection signal="pressed" from="Map/GUI/Boost/BoostLeftButton" to="Map/Obstacle" method="_on_boost_left_button_pressed"]
+[connection signal="pressed" from="Map/GUI/Boost/BoostRightButton" to="Map/Obstacle" method="_on_boost_right_button_pressed"]
+[connection signal="pressed" from="Map/GUI/TilesSpawn/TilesSpawnCoinButton" to="Map/Obstacle" method="_on_tiles_spawn_coin_button_pressed"]

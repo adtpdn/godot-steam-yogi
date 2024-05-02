@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://q6lgm8ws2hpb"]
+
+[ext_resource type="Texture2D" uid="uid://2tsff18bh76h" path="res://assets/tiles/power_up/stack.png" id="1_g68p4"]
+
+[node name="Boost" type="Sprite3D"]
+transform = Transform3D(0.0668871, 0, 0, 0, -2.93283e-09, 0.743235, 0, -0.0670953, -3.24878e-08, 0, 0.51, 0)
+texture = ExtResource("1_g68p4")

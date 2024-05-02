@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://cqbntxn2qriwo"]
+
+[ext_resource type="Texture2D" uid="uid://cdyhpwj20qweb" path="res://assets/textures/characters/oldpops_diffuse_tex.png" id="1_fnpxa"]
+
+[resource]
+resource_name = "Material"
+cull_mode = 2
+albedo_texture = ExtResource("1_fnpxa")
+roughness = 0.5

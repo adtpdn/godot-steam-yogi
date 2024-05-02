@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8lv17kvafslc"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_m7d7v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l1ds8"]
+albedo_color = Color(1, 0.596078, 0, 1)
+
+[node name="Block" type="MeshInstance3D" groups=["obstacle_block"]]
+transform = Transform3D(0.996, 0, 0, 0, 1.025, 0, 0, 0, 0.195, 0, 0, 0)
+mesh = SubResource("BoxMesh_m7d7v")
+surface_material_override/0 = SubResource("StandardMaterial3D_l1ds8")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
